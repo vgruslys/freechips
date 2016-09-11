@@ -16,7 +16,14 @@ CXXFLAGS=-Isource -Isource/communicator -Isource/global -Isource/history -std=c+
 
 #Main rule: create holdem
 holdem: $(OBJECT_FILES)
-	$(CXX) -o $@ $^ 
+	$(CXX) -o $@ $^
+
+#Cleanup
+.PHONY:clean
+clean:
+	rm -f $(OBJECT_FILES) holdem
+	
+
 	      
 
 
