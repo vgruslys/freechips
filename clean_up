@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-find . -name "*.o" -delete
-rm compile.log
-rm holdem
