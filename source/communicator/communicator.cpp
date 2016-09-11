@@ -291,7 +291,7 @@ CommandPair Communicator :: readHeader() const
     delete string1;
     delete string2;
 
-    return std::make_pair<Command,Command> (command1,command2);
+    return std::make_pair(command1,command2);
 }
 
 int Communicator :: doCommand(Command command1, Command command2)

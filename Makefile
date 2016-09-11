@@ -12,7 +12,7 @@ SOURCE_FILES = $(wildcard source/*.cpp) \
 OBJECT_FILES=$(SOURCE_FILES:.cpp=.o)
 
 #Define flags for g++, in this case just a bunch of -I[include_directory] plus the C++11 specification
-CXXFLAGS=-Isource -Isource/communicator -Isource/global -Isource/history
+CXXFLAGS=-Isource -Isource/communicator -Isource/global -Isource/history -std=c++11
 
 #Main rule: create holdem
 holdem: $(OBJECT_FILES)
