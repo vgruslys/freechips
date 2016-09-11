@@ -6,6 +6,7 @@
 #include "history.h"
 #include "logger.h"
 
+#include <cstring>
 #include <cstdio>
 #include <utility>
 #include <sys/time.h>
