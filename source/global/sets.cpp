@@ -63,7 +63,7 @@ void Set :: addCard(Suit suit, Height height)
 
 HandValue Set :: findRoyalFlush() const
 {
-    int8_t best_straight_flush = max(
+    std::int8_t best_straight_flush = max(
             _best_straight[_suit_mask[0]],
             _best_straight[_suit_mask[1]],
             _best_straight[_suit_mask[2]],
@@ -124,7 +124,7 @@ HandValue Set :: findFullHouse() const
 
 HandValue Set :: findFlush() const
 {
-    int8_t suit = -1;
+    std::int8_t suit = -1;
 
     for (int i = 0; i < 4; ++i)
         if (_suit_count[i] >= 5)
@@ -199,21 +199,21 @@ HandValue Set :: findHighCard() const
 
 void Set :: initialise()
 {
-    for (int16_t i = 0; i < 8192; ++i)
+    for (std::int16_t i = 0; i < 8192; ++i)
         _best_straight[i] = 0;
 
     int16_t baby_straight = 0x100f;
-    for (int16_t i = 0; i < 256; ++i)
+    for (std::int16_t i = 0; i < 256; ++i)
         _best_straight[baby_straight | (i << 4)] = 5;
 
     int16_t straight = 0x001f;
-    for (int8_t s = 0; s < 9; ++s)
-        for (int16_t i = 0; i < 8192; ++i) // Can be done faster
+    for (std::int8_t s = 0; s < 9; ++s)
+        for (std::int16_t i = 0; i < 8192; ++i) // Can be done faster
             _best_straight[(straight << s) | i] = s + 6;
 
     _best_cards[0] = 0;
     for (HandValue top = 0; top < 13; ++top)
-        for (int16_t i = 0; i < (1 << top); ++i)
+        for (std::int16_t i = 0; i < (1 << top); ++i)
             _best_cards[(1 << top) | i] = ((top + 2) << 16) | (_best_cards[i] >> 4);
 
     _globally_initialised = 1;

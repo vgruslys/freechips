@@ -4,13 +4,12 @@
 #include "error.h"
 #include "global_types.h"
 
-#include "stdint.h"
+#include <cstdint>
 #include <cstdio>
-#include <string>
 
-typedef int8_t Card;
-typedef int8_t Height;
-typedef int8_t Suit;
+typedef std::int8_t Card;
+typedef std::int8_t Height;
+typedef std::int8_t Suit;
 
 Card strToCard(char*);
 char heightToChar(Height);

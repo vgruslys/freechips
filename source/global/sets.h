@@ -7,8 +7,8 @@
 #include <cstdint>
 #include <algorithm>
 
-typedef int32_t HandValue;
-typedef int16_t HeightMask;
+typedef std::int32_t HandValue;
+typedef std::int16_t HeightMask;
 
 const HandValue H_ROYAL_FLUSH     = 9;
 const HandValue H_STRAIGHT_FLUSH  = 8;
@@ -49,10 +49,10 @@ class Set {
 
 
         HeightMask _suit_mask[4];
-        int8_t _suit_count[4];
+        std::int8_t _suit_count[4];
 
         HeightMask _frequency_mask[4];
-        int16_t _height_map[13];
+        std::int16_t _height_map[13];
 
         HandValue _value;
 

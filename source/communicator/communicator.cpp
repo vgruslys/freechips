@@ -1,14 +1,5 @@
 #include "communicator.h"
-#include <cstring>
 
-#include "error.h"
-#include "global_types.h"
-#include "history.h"
-#include "logger.h"
-
-#include <cstdio>
-#include <utility>
-#include <sys/time.h>
 void Communicator :: check() 
 {
     fprintf(getStreamOut(), "check 0\n");
@@ -237,62 +228,62 @@ CommandPair Communicator :: readHeader() const
 
     getLogger().log(L_DEBUG, "Reading command from the server: '%s %s'\n", string1, string2);
 
-    if (hasOwnName() && strcmp(string1, getOwnName()) == 0)
+    if (hasOwnName() && std::strcmp(string1, getOwnName()) == 0)
         command1 = PLAYER_ME;
-    else if (hasOppName() && strcmp(string1, getOppName()) == 0)
+    else if (hasOppName() && std::strcmp(string1, getOppName()) == 0)
         command1 = PLAYER_OPP;
-    else if (strcmp(string1, "Settings") == 0)
+    else if (std::strcmp(string1, "Settings") == 0)
         command1 = SETTINGS;
-    else if (strcmp(string1, "Match") == 0)
+    else if (std::strcmp(string1, "Match") == 0)
         command1 = MATCH;
-    else if (strcmp(string1, "Action") == 0)
+    else if (std::strcmp(string1, "Action") == 0)
         command1 = ACTION;
     else
         throw CommunicatorError("Unrecognised first command");
 
-    if (hasOwnName() && strcmp(string2, getOwnName()) == 0)
+    if (hasOwnName() && std::strcmp(string2, getOwnName()) == 0)
         command2 = PLAYER_ME;
-    else if (hasOppName() && strcmp(string2, getOppName()) == 0)
+    else if (hasOppName() && std::strcmp(string2, getOppName()) == 0)
         command2 = PLAYER_OPP;
-    else if (strcmp(string2, "timebank") == 0)
+    else if (std::strcmp(string2, "timebank") == 0)
         command2 = TIME_BANK;
-    else if (strcmp(string2, "time_per_move") == 0)
+    else if (std::strcmp(string2, "time_per_move") == 0)
         command2 = TIME_PER_MOVE;
-    else if (strcmp(string2, "hands_per_level") == 0)
+    else if (std::strcmp(string2, "hands_per_level") == 0)
         command2 = HANDS_PER_LEVEL;
-    else if (strcmp(string2, "starting_stack") == 0)
+    else if (std::strcmp(string2, "starting_stack") == 0)
         command2 = STARTING_STACK;
-    else if (strcmp(string2, "your_bot") == 0)
+    else if (std::strcmp(string2, "your_bot") == 0)
         command2 = YOUR_BOT;
-    else if (strcmp(string2, "round") == 0)
+    else if (std::strcmp(string2, "round") == 0)
         command2 = ROUND;
-    else if (strcmp(string2, "small_blind") == 0 || strcmp(string2, "smallBlind") == 0)
+    else if (std::strcmp(string2, "small_blind") == 0 || std::strcmp(string2, "smallBlind") == 0)
         command2 = SMALL_BLIND;
-    else if (strcmp(string2, "big_blind") == 0 || strcmp(string2, "bigBlind") == 0)
+    else if (std::strcmp(string2, "big_blind") == 0 || std::strcmp(string2, "bigBlind") == 0)
         command2 = BIG_BLIND;
-    else if (strcmp(string2, "on_button") == 0 || strcmp(string2, "onButton") == 0)
+    else if (std::strcmp(string2, "on_button") == 0 || std::strcmp(string2, "onButton") == 0)
         command2 = ON_BUTTON;
-    else if (strcmp(string2, "table") == 0)
+    else if (std::strcmp(string2, "table") == 0)
         command2 = TABLE;
-    else if (strcmp(string2, "max_win_pot") == 0 || strcmp(string2, "maxWinPot") == 0)
+    else if (std::strcmp(string2, "max_win_pot") == 0 || std::strcmp(string2, "maxWinPot") == 0)
         command2 = MAX_WIN_POT;
-    else if (strcmp(string2, "amount_to_call") == 0 || strcmp(string2, "amountToCall") == 0)
+    else if (std::strcmp(string2, "amount_to_call") == 0 || std::strcmp(string2, "amountToCall") == 0)
         command2 = AMOUNT_TO_CALL;
-    else if (strcmp(string2, "stack") == 0)
+    else if (std::strcmp(string2, "stack") == 0)
         command2 = STACK;
-    else if (strcmp(string2, "hand") == 0)
+    else if (std::strcmp(string2, "hand") == 0)
         command2 = HAND;
-    else if (strcmp(string2, "fold") == 0)
+    else if (std::strcmp(string2, "fold") == 0)
         command2 = FOLD;
-    else if (strcmp(string2, "check") == 0)
+    else if (std::strcmp(string2, "check") == 0)
         command2 = CHECK;
-    else if (strcmp(string2, "call") == 0)
+    else if (std::strcmp(string2, "call") == 0)
         command2 = CALL;
-    else if (strcmp(string2, "raise") == 0)
+    else if (std::strcmp(string2, "raise") == 0)
         command2 = RAISE;
-    else if (strcmp(string2, "wins") == 0)
+    else if (std::strcmp(string2, "wins") == 0)
         command2 = WINS;
-    else if (strcmp(string2, "post") == 0)
+    else if (std::strcmp(string2, "post") == 0)
         command2 = POST;
     else
         throw CommunicatorError("Unrecognised second command");
@@ -331,12 +322,12 @@ int Communicator :: doCommand(Command command1, Command command2)
         }
         else if (command2 == YOUR_BOT) {
             char* name = readStr();
-            if (strcmp(name, "player1") == 0) {
+            if (std::strcmp(name, "player1") == 0) {
                 setOwnName("player1");
                 setOppName("player2");
                 getHistory().defineStartingPlayer(OPP); // Terrible hack
             }
-            else if (strcmp(name, "player2") == 0) {
+            else if (std::strcmp(name, "player2") == 0) {
                 setOwnName("player2");
                 setOppName("player1");
                 getHistory().defineStartingPlayer(ME); // Terrible hack
@@ -369,9 +360,9 @@ int Communicator :: doCommand(Command command1, Command command2)
             char* name = readStr();
 
             Side player;
-            if (strcmp(name, getOwnName()) == 0)
+            if (std::strcmp(name, getOwnName()) == 0)
                 player = ME;
-            else if (strcmp(name, getOppName()) == 0)
+            else if (std::strcmp(name, getOppName()) == 0)
                 player = OPP;
             else
                 throw CommunicatorError("Invalid player name");
