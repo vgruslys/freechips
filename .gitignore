@@ -8,6 +8,10 @@
 *.so
 holdem
 
+# Binary folders *
+##################
+bin/
+
 # Packages #
 ############
 *.7z

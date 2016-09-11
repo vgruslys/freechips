@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+java -cp server/bin com.theaigames.game.texasHoldem.TexasHoldem ./holdem ./holdem 2>err.log 1>out.log
