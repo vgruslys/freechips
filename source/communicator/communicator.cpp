@@ -1,5 +1,14 @@
 #include "communicator.h"
+#include <cstring>
 
+#include "error.h"
+#include "global_types.h"
+#include "history.h"
+#include "logger.h"
+
+#include <cstdio>
+#include <utility>
+#include <sys/time.h>
 void Communicator :: check() 
 {
     fprintf(getStreamOut(), "check 0\n");
@@ -290,7 +299,6 @@ CommandPair Communicator :: readHeader() const
 
     delete string1;
     delete string2;
-
 
     return std::make_pair<Command,Command> (command1,command2);
 }

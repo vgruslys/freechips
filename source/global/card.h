@@ -4,7 +4,7 @@
 #include "error.h"
 #include "global_types.h"
 
-#include <cstdint>
+#include "stdint.h"
 #include <cstdio>
 #include <string>
 
