@@ -138,6 +138,10 @@ public class TexasHoldem implements Logic
 		System.out.println("Saving the game...");
 		
 		// print stuff here... (like the bot dumps)
+		System.out.println("\nBOT #1 dump:\n");
+		System.out.println(bot1.getDump());
+		System.out.println("\nBOT #2 dump:\n");
+		System.out.println(bot2.getDump());
 	}
     
     public static void main(String args[]) throws Exception
