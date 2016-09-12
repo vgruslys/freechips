@@ -1,11 +1,13 @@
 #include<iostream>
 #include "card.h"
-#include "rdplain.h"
+#include "random_deck_plain.h"
+#include "odds_calculator_random.h"
 using namespace std;
 
 int main()
 {
-	RDPlain deck;
+	RandomDeckPlain deck;
+	/*
 	Card card;
 	for(int i=0; i!=10; i++)
 	{
@@ -28,5 +30,22 @@ int main()
 	{
 		cout << (float) array[i] / (float) MAX << endl; 
 	}
+	
+	*/
+
+	
+	OddsCalculatorRandom calculator;
+	Card mycards[2];
+	Card oppcards[2];
+	Card street[5];
+	
+
+	parseCards("[As,Ah]",mycards);
+	parseCards("[Kd,Kc]", oppcards);
+	parseCards("[4s,4h,4d,4c,5c]", street);
+	
+	pair<float, float> result = calculator.handOdds(mycards[0], mycards[1], oppcards[0], oppcards[1], street, 5);
+	cout << result.first << " " << result.second << " " << result.first + 0.5*result.second  << endl;
 	return 0;
+	
 }

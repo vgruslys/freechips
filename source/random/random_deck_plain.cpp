@@ -54,7 +54,7 @@ void RandomDeckPlain::swap(int i, int j)
 void RandomDeckPlain::removeCard(Card card)
 {
     int num = cardToInt(card);
-    if(_card_position[num] < _end)
+    if(_card_position[num] >= _end)
         throw RandomError("Card is not in the deck\n");
     swap(_card_position[num], _end-1);
     _end--;
@@ -68,7 +68,7 @@ void RandomDeckPlain::reset()
 void RandomDeckPlain::addCard(Card card)
 {
     int num = cardToInt(card);
-    if(_card_position[num] >= _end)
+    if(_card_position[num] < _end)
         throw RandomError("Card is already in the deck\n");
 
     swap(_card_position[num], _end);
