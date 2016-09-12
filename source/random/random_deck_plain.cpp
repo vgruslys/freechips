@@ -1,14 +1,14 @@
-#include "rdplain.h"
+#include "random_deck_plain.h"
 #include <iostream>
 using namespace std;
-RDPlain::RDPlain()
+RandomDeckPlain::RandomDeckPlain()
 {
     _cards.reserve(52);
     _card_position.reserve(52);
     initialize();
 }
 
-void RDPlain::initialize()
+void RandomDeckPlain::initialize()
 {
     for(int i=0; i!= 52; i++)
     {
@@ -18,7 +18,7 @@ void RDPlain::initialize()
     _end = 52;
 }
 
-Card RDPlain::drawCard()
+Card RandomDeckPlain::drawCard()
 {
     if(_end == 0)
         throw RandomError("No card to draw from\n");
@@ -28,21 +28,21 @@ Card RDPlain::drawCard()
     return intToCard(_cards[_end]); 
 }
 
-void RDPlain::remove(int pos)
+void RandomDeckPlain::remove(int pos)
 {
     _end--;
     swap(pos, _end);
 
 }
 
-void RDPlain::returnCard()
+void RandomDeckPlain::returnCard()
 {
     if(_end == 52)
         throw RandomError("No card to return.\n");
         
     _end++;
 }
-void RDPlain::swap(int i, int j)
+void RandomDeckPlain::swap(int i, int j)
 {
     _card_position[_cards[i]] = j;
     _card_position[_cards[j]] = i;
@@ -51,7 +51,7 @@ void RDPlain::swap(int i, int j)
     _cards[j] = temp;
 }
 
-void RDPlain::removeCard(Card card)
+void RandomDeckPlain::removeCard(Card card)
 {
     int num = cardToInt(card);
     if(_card_position[num] < _end)
@@ -60,12 +60,12 @@ void RDPlain::removeCard(Card card)
     _end--;
 }
 
-void RDPlain::reset()
+void RandomDeckPlain::reset()
 {
     _end = 52;
 }
 
-void RDPlain::addCard(Card card)
+void RandomDeckPlain::addCard(Card card)
 {
     int num = cardToInt(card);
     if(_card_position[num] >= _end)
@@ -75,10 +75,15 @@ void RDPlain::addCard(Card card)
     _end++;
 }
 
-void RDPlain::drawCard(Card* array, int n)
+void RandomDeckPlain::drawCard(Card* array, int n)
 {
     for(int i=0; i!=n; i++)
     {
         array[i] = drawCard();
     }
+}
+
+void RandomDeckPlain::returnCard(int n) {
+    for(int i=0; i!=n; i++)
+        returnCard();
 }

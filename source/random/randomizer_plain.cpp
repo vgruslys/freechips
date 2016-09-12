@@ -1,18 +1,18 @@
-#include "rplain.h"
+#include "randomizer_plain.h"
 #include <random>
 #include <algorithm>
 
-void RPlain::seed()
+void RandomizerPlain::seed()
 {
     _mt.seed(_device());
 }
 
-RPlain::RPlain():_uniform(0,51)
+RandomizerPlain::RandomizerPlain():_uniform(0,51)
 {
     seed();
 }
 
-int RPlain::randInt(int a, int b)
+int RandomizerPlain::randInt(int a, int b)
 {
     if(a == _uniform.min() && b == _uniform.max()) 
     {
@@ -25,7 +25,7 @@ int RPlain::randInt(int a, int b)
     }
 }
 
-int RPlain::randWeights(int* array, int size)
+int RandomizerPlain::randWeights(int* array, int size)
 {
     return 0;
 }

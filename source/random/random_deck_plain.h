@@ -1,20 +1,21 @@
-#ifndef __RDPLAIN__
-#define __RDPLAIN__
+#ifndef __RANDOM_DECK_PLAIN__
+#define __RANDOM_DECK_PLAIN__
 #include "random_deck.h"
-#include "rplain.h"
+#include "randomizer_plain.h"
 #include "card.h"
 #include <vector>
-class RDPlain: public RandomDeck {
+class RandomDeckPlain: public RandomDeck {
     public:
     
         void removeCard(Card); //Removes a card from the deck
         void addCard(Card); //Adds a card to the deck
         void returnCard(); // Returns the last card
+        void returnCard(int); //Returns the last n cards
         void reset(); //Adds all the missing cards back to the deck
         Card drawCard(); //Draws a card from the deck
         void drawCard(Card*, int); //Draws n cards from the deck and stores them in an array of cards
         
-        RDPlain();
+        RandomDeckPlain();
     private:
         std::vector<int> _cards; //array of 52 cards
         std::vector<int> _card_position; // ith entry points to the poition of the ith card in _cards
@@ -22,6 +23,6 @@ class RDPlain: public RandomDeck {
         void remove(int); //puts the ith card at position _end-1 and decreases _end by one
         void swap(int i, int j); //swaps card at pos i and pos j
         void initialize(); //intialize the deck
-        RPlain _rgen;
+        RandomizerPlain _rgen;
 };
 #endif
