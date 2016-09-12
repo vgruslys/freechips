@@ -8,9 +8,10 @@
 *.so
 holdem
 
-# Binary folders *
-##################
+# Folders #
+###########
 bin/
+test/
 
 # Packages #
 ############
