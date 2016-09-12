@@ -135,3 +135,36 @@ Suit getSuit(Card card)
 {
     return (card & SUIT_MASK) >> 4;
 }
+
+int cardToInt(Card card)
+{
+    return getSuit(card)*13 + getHeight(card)-2;
+}
+
+Card intToCard(int n)
+{
+    Suit suit = n/13;
+    Height height = 2+ (n % 13);
+    return (suit << 4) | height;
+}
+
+char suitToChar(Suit suit)
+{
+    switch(suit)
+    {
+        case 0:
+            return 'h';
+            break;
+        case 1:
+            return 'd';
+            break;
+        case 2:
+            return 'c';
+            break;
+        case 3:
+            return 's';
+            break;
+        default:
+            throw CardError("Unrecognized suit");
+    }
+}
