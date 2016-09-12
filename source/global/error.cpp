@@ -22,7 +22,15 @@ const char* CardError :: what() const throw()
     return _message;
 }
 
+RandomError :: RandomError(const char* message)
+{
+    _message = message;
+}
 
+const char* RandomError :: what() const throw()
+{
+    return _message;
+}
 
 DefinableError :: DefinableError(const char* message)
 {

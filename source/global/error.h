@@ -58,4 +58,11 @@ class BlindsError : public std::exception {
         const char* _message;
 };
 
+class RandomError : public std::exception {
+    public:
+        RandomError(const char*);
+        const char* what() const throw();
+    private:
+        const char* _message;
+};
 #endif
