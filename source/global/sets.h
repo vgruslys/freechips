@@ -21,6 +21,21 @@ const HandValue H_TWO_PAIR        = 2;
 const HandValue H_PAIR            = 1;
 const HandValue H_HIGH_CARD       = 0;
 
+/*Set - a class which computes the best card combination out of a pair of cards and  5 street cards */
+
+/*Usage: Set(ptr_to_street, card1, card2) set;
+ * 
+ * To compare two set of cards do
+ * Set(ptr_to_street, card1, card2) set1;
+ * Set(ptr_to_street, card3, card4) set2;
+ * and then:
+ * 
+ * set1.getValue() < set2.getValue();
+ * 
+ * OR
+ * 
+ * set1 < set2;
+*/
 class Set {
     
     public:
@@ -28,7 +43,9 @@ class Set {
         Set(Card*, Card, Card);
         
         HandValue getValue() const;
-
+        bool operator<(const Set& );
+        bool operator==(const Set& );
+        bool operator>(const Set& );
     private:
 
         HandValue findRoyalFlush() const;

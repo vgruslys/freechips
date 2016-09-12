@@ -288,3 +288,23 @@ HandValue getHandValueType(HandValue value)
 {
     return getHandValuePosition(value, 0);
 }
+
+/* operator< */
+
+bool Set::operator<(const Set&  rhs)
+{
+    return this->getValue() < rhs.getValue();
+}
+
+/*operator== */
+
+bool Set::operator==(const Set&  rhs)
+{
+    return this->getValue() == rhs.getValue();
+}
+
+/*operator> */
+bool Set::operator>(const Set&  rhs)
+{
+    return this->getValue() > rhs.getValue();
+}
