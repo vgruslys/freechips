@@ -5,7 +5,6 @@
 /*Evaluator - a class which determines the score of a community + player hand */
 class Judge {
 public:
-	virtual int evaluate(const Community&, const PlayerCards&);
-	virtual int evaluate(const Community&, const PlayerCards&, const PlayerCards&);
+	virtual int verdict(const Community&, const PlayerCards&);
 };
 #endif
