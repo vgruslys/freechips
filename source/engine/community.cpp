@@ -35,3 +35,11 @@ Community :: ~Community() {
 	delete [] suit_numbers;
 	delete [] height_numbers;
 }
+
+Community :: getKey() const {
+	return _key;
+}
+
+Community :: getCodedKey() const {
+	return _coded_key;
+}
