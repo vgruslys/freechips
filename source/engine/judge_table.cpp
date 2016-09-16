@@ -123,7 +123,7 @@ void JudgeTable :: generateHighestStraight()
     for (int offset = 0; offset <= 8; ++offset)
         for (uint64_t prefix = 0; prefix < (1 << (8 - offset)); ++prefix)
             for (uint64_t suffix = 0; suffix < (1 << offset); ++suffix)
-                _highest_straight[(straight << offset) | (prefix << (offset + 5) | suffix] = 0x10 | (offset + 6);
+                _highest_straight[(straight << offset) | (prefix << (offset + 5)) | suffix] = 0x10 | (offset + 6);
 }
 
 void JudgeTable :: recFlushTable(Community& com, int start, int depth) {

@@ -1,14 +1,17 @@
-#ifndef __JUDGE_TABLE_
+#ifndef __JUDGE_TABLE__
 #define __JUDGE_TABLE__
+
 #include "community.h"
 #include "player_cards.h"
 #include "judge.h"
+
 class JudgeTable /*: public Judge*/ {
-	public:
+public:
 	int verdict(const Community&, const PlayerCards&) const; // the judge renders its verdict, which is an int 
 														// representing the value of the best combination
 	JudgeTable();
 	~JudgeTable();
+
 private:
 	int flushScore(uint64_t) const;     // to generate the flush table, the judge uses this to find the flush score
 	int unsuitedScore(uint64_t) const;  //to generate the unsuited table, the judge uses this
@@ -35,7 +38,7 @@ private:
 	void generateTables();              // generates the tables, called by the constructor
 	
     void generateFiveHighestCards();    // Precompute the _five_highest_cards array. Called by the constructor.
-    void generateFiveHighestCards();    // Precompute the _highest_straight array. Called by the constructor.
+    void generateHighestStraight();     // Precompute the _highest_straight array. Called by the constructor.
 
     // In what follows, rec stands for recursive.
     void recFlushTable(Community&, int, int);           //To cleanly construct the flush table
