@@ -20,6 +20,7 @@ private:
 						                //_unsuited_table[unsuited_key][unsuited_player_key] where the unsuited key is the community coded large key
 						                //and the unsuited player key is a small int representing the player hand
 	
+<<<<<<< HEAD
     int* _suit_map;                     //  maps a small suit key to a suit [bit position, i.e. 0, 13, 26, 39 or 52 so we know by how much to shift to etc]
 					                    //This is a small array used to find the suit which could give a flush
                     
@@ -34,8 +35,8 @@ private:
 
 	void generateTables();              // generates the tables, called by the constructor
 	
-    void generateFiveHighestCards();    // Precompute the _five_highest_cards array.
-    void generateFiveHighestCards();    // Precompute the _highest_straight array.
+    void generateFiveHighestCards();    // Precompute the _five_highest_cards array. Called by the constructor.
+    void generateFiveHighestCards();    // Precompute the _highest_straight array. Called by the constructor.
 
     // In what follows, rec stands for recursive.
     void recFlushTable(Community&, int, int);           //To cleanly construct the flush table

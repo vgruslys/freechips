@@ -6,7 +6,6 @@ Community :: Community():_key(0), _coded_key(0), _card_map(new uint64_t [52]), _
 	
 	for(int i=0; i!=51; i++) {
 		_coded_card_map[i] = (suit_numbers[i/13] << 32) + height_numbers[i % 13]; //first 32 bits contain the large key, 
-																				  //the last 32bits contain the small key
 		_card_map[i] = (1 << i); //the simple 64bit key
 	}
 	
@@ -14,11 +13,12 @@ Community :: Community():_key(0), _coded_key(0), _card_map(new uint64_t [52]), _
 
 void Community :: addCard(Card card) {
 	_key += _card_map[card]; 
-	_coded_key += _card_map[card]; 
+	_coded_key += _coded_card_map[card]; 
 }
 void Community :: removeCard(Card card) {
 	_key -= _card_map[card]; 
-	_coded_key -= _card_map[card];
+	_coded_key -= _coded_card_map[card];
+
 }
 
 void Community :: reset() {

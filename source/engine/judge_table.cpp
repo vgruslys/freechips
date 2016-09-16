@@ -2,6 +2,7 @@
 #include "community.h"
 #include "player_cards.h"
 #include "key_numbers.h"
+
 #include <iostream>
 
 using namespace std;
@@ -30,7 +31,7 @@ int JudgeTable::verdict(const Community& com, const PlayerCards& pc) const {
 	_coded_key = com.getCodedKey();
 	
 	/*extract the two coded keys */
-	_unsuited_key = _coded_key && _mask32;
+	_unsuited_key = _coded_key & _mask32;
 	_suit_key = _coded_key >> 32;
 	
 	/*Load player keys*/
@@ -41,17 +42,27 @@ int JudgeTable::verdict(const Community& com, const PlayerCards& pc) const {
 	_suit_shift = _suit_map[_suit_key];
 
 	/*Compute flush score */
-	_flush_score = _flush_table[((_key >> _suit_shift) && _mask13) | ((_player_key >> _suit_shift) && _mask13)];
+	_flush_score = _flush_table[((_key >> _suit_shift) & _mask13) | ((_player_key >> _suit_shift) & _mask13)];
 	/*Compute the unsuited score*/
 	_unsuited_score = _unsuited_table[_unsuited_key][_player_unsuited_key];
 	
 	return _flush_score > _unsuited_score? _flush_score : _unsuited_score; // returns max of flush and unsuited score
 }
 
-JudgeTable :: JudgeTable(): _suit_map(new int [MAX_SUIT_NUMBERS_5SUM + 1]{0}),
-						  _flush_table(new int [8192]{0}),
-						  _unsuited_table(new int* [MAX_HEIGHT_NUMBERS_5SUM + 1]{nullptr})
+JudgeTable :: JudgeTable(): _suit_map(new int [MAX_SUIT_NUMBERS_5SUM + 1]),
+						  _flush_table(new int [8192]),
+						  _unsuited_table(new int* [MAX_HEIGHT_NUMBERS_5SUM + 1])
 {
+	for(int i=0; i!=MAX_SUIT_NUMBERS_5SUM + 1; i++) {
+		_suit_map[i] = 0;
+	}
+	for(int i=0; i!= 8192; i++) {
+		_flush_table[i] = 0;
+	}
+	
+	for(int i=0; i!= MAX_HEIGHT_NUMBERS_5SUM + 1; i++) {
+		_unsuited_table[i] = NULL;
+	}
 	generateTables();
     generateFiveHighestCards();
     generateHighestStraight();
@@ -86,50 +97,6 @@ void JudgeTable :: generateTables() {
 	com.reset();
 	//Let us not forget the suit map
 	recSuitMap(com, 0,0);
-	
-	/*
-	int bitshift;
-	int count = 0;
-	for(int cc1 = 0; cc1 != 52 ; cc1++) {
-		com.addCard(cc1);
-		for(int cc2 = cc1 + 1; cc2 != 52; cc2 ++) {
-			com.addCard(cc2);
-			for(int cc3 = cc2+1; cc3 != 52; cc3 ++) {
-				com.addCard(cc3);
-				for(int cc4 = cc3+1; cc4 != 52 ; cc4 ++) {
-					com.addCard(cc4);
-					for(int cc5 = cc4 + 1; cc5 != 52; cc5 ++) {
-					com.addCard(cc5);		
-					//Community is now fixed, we now look at PlayerCards
-					for(int pc1 = 0; pc1 != 52; pc1 ++) {
-						pc.addCard(pc1);
-						for(int pc2 = pc1 + 1; pc2 !=52; pc2 ++) {
-							pc.addCard(pc2);
-							count++;
-							if(count%1000000 == 0)
-								cout << count/1000000 << " million combinations done" << endl;
-							if(__builtin_popcountll(com.getKey() | pc.getKey()) == 7) //Test whether all 7 cards are distinct
-							{
-								bitshift = _suit_map[com.getCodedKey() >> 32];
-								_flush_table[ ((com.getKey()>> bitshift) && mask13 ) | ((pc.getKey()>>bitshift) && mask13)] = flushScore(com, pc);
-								if(_unsuited_table[com.getCodedKey() && mask32] == nullptr)
-									_unsuited_table[com.getCodedKey() && mask32] = new int[MAX_HAND_HEIGHT_NUMBERS_2SUM+1] {0};
-								_unsuited_table[com.getCodedKey() && mask32][pc.getCodedKey()] = unsuitedScore(com, pc);
-							}
-							pc.removeCard(pc2);
-						}
-						pc.removeCard(pc1);
-					}
-					com.removeCard(cc5);
-					}
-				com.removeCard(cc4);
-				}
-			com.removeCard(cc3);
-			}
-		com.removeCard(cc2);		
-		}
-	com.removeCard(cc1);
-	}*/
 }
 
 void JudgeTable :: generateFiveHighestCards()
@@ -182,8 +149,8 @@ void JudgeTable :: recUnsuitedTable(Community& com, int start, int depth, int* f
 				com.addCard(i+13*freq_table[i]);
 				freq_table[i]++;
 				this->recUnsuitedTable(com, i, depth+1, freq_table);
-				com.removeCard(i);
 				freq_table[i]--;
+				com.removeCard( i+13*freq_table[i] );
 			}
 		}
 	}
@@ -191,10 +158,11 @@ void JudgeTable :: recUnsuitedTable(Community& com, int start, int depth, int* f
 
 void JudgeTable :: recUnsuitedTablePlayer(PlayerCards& pc, Community& com, int start, int depth, int* freq_table) {
 	if(depth == 2) {
-		int* ptable = _unsuited_table[com.getCodedKey() && 0x00000000ffffffff];
-		if(ptable == nullptr) {
-			ptable = new int(MAX_HAND_HEIGHT_NUMBERS_2SUM+1);
+		int* ptable = _unsuited_table[com.getCodedKey() & 0x00000000ffffffff];
+		if(ptable == NULL) {
+			ptable = new int [MAX_HAND_HEIGHT_NUMBERS_2SUM+1];
 		}
+		
 		ptable[pc.getCodedKey()] = unsuitedScore(com.getKey() | pc.getKey());
 	}
 	else {
@@ -203,22 +171,23 @@ void JudgeTable :: recUnsuitedTablePlayer(PlayerCards& pc, Community& com, int s
 				pc.addCard(i+13*freq_table[i]);
 				freq_table[i]++;
 				this->recUnsuitedTablePlayer(pc,com,i,depth+1,freq_table);
-				pc.removeCard(i);
 				freq_table[i]--;
+				pc.removeCard(i+13*freq_table[i]);
 			}
 		}
 	}
 }
 
 void JudgeTable :: recSuitMap(Community& com, int start, int depth) {
+	
 	if(depth == 5) {
-		if(__builtin_popcountll(com.getKey() && 0x0000000000001fff) >=3)
+		if(__builtin_popcountll(com.getKey() & 0x0000000000001fff) >=3)
 			_suit_map[com.getCodedKey()>>32] = 0;
-		else if (__builtin_popcountll((com.getKey()>>13) && 0x0000000000001fff) >=3)
+		else if (__builtin_popcountll((com.getKey()>>13) & 0x0000000000001fff) >=3)
 			_suit_map[com.getCodedKey()>>32] = 13;
-		else if (__builtin_popcountll((com.getKey()>>26) && 0x0000000000001fff) >=3)
+		else if (__builtin_popcountll((com.getKey()>>26) & 0x0000000000001fff) >=3)
 			_suit_map[com.getCodedKey()>>32] = 26;
-		else if (__builtin_popcountll((com.getKey()>>39) && 0x0000000000001fff) >=3)
+		else if (__builtin_popcountll((com.getKey()>>39) & 0x0000000000001fff) >=3)
 			_suit_map[com.getCodedKey()>>32] = 39;
 		else 
 			_suit_map[com.getCodedKey()>>32] = 52;
