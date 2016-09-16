@@ -4,8 +4,8 @@
 
 Community :: Community():_key(0), _coded_key(0), _card_map(new uint64_t [52]), _coded_card_map(new uint64_t [52]) {
 	
-	for(int i=0; i!=51; i++) {
-		_coded_card_map[i] = (suit_numbers[i/13] << 32) + height_numbers[i % 13]; //first 32 bits contain the large key, 
+	for(int i=0; i!=52; i++) {
+		_coded_card_map[i] = (suit_numbers[i/13] << 32) + height_numbers[i % 13]; //first 32 bits contain the large key,
 		_card_map[i] = (1 << i); //the simple 64bit key
 	}
 	

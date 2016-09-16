@@ -3,10 +3,6 @@
 #include "player_cards.h"
 #include "key_numbers.h"
 
-#include <iostream>
-
-using namespace std;
-
 int JudgeTable::verdict(const Community& com, const PlayerCards& pc) const {
 	
 	/*static internal variables */
@@ -63,22 +59,20 @@ JudgeTable :: JudgeTable(): _suit_map(new int [MAX_SUIT_NUMBERS_5SUM + 1]),
 	for(int i=0; i!= MAX_HEIGHT_NUMBERS_5SUM + 1; i++) {
 		_unsuited_table[i] = NULL;
 	}
-    generateFiveHighestCards();
+	generateFiveHighestCards();
     generateHighestStraight();
 	generateTables();
+	
 }
 
-JudgeTable :: ~JudgeTable ()
-{
-	delete[] _suit_map;
-	delete[] _flush_table;
-    delete[] _five_highest_cards;
-    delete[] _highest_straight;
-	
-    for(int i=0; i!= MAX_HEIGHT_NUMBERS_5SUM + 1; i++)
+JudgeTable :: ~JudgeTable () {
+	delete [] _suit_map;
+	delete [] _flush_table;
+	for(int i=0; i!= MAX_HEIGHT_NUMBERS_5SUM + 1; i++)
 		delete [] _unsuited_table[i];
-	delete[] _unsuited_table;
-
+	delete [] _unsuited_table;
+	delete[] _five_highest_cards;
+    delete[] _highest_straight;
 	
 }
 void JudgeTable :: generateTables() {
@@ -91,41 +85,14 @@ void JudgeTable :: generateTables() {
 	//Now we construct the unsuited table
 	com.reset();
 	
-	int freq_table[13] {0};
+	int freq_table[13];
+	for(int i=0; i!=13; i++)
+		freq_table[i] = 0;
 	recUnsuitedTable(com,0,0,freq_table);
 	
 	com.reset();
 	//Let us not forget the suit map
 	recSuitMap(com, 0,0);
-}
-
-void JudgeTable :: generateFiveHighestCards()
-{
-    _five_highest_cards = new uint64_t[1 << 13];
-
-    _five_highest_cards[0] = 0;
-    for (int bit = 0; bit < 13; bit = ++bit)
-       for (uint64_t suffix = 0; suffix < (1 << bit); ++suffix)
-          _five_highest_cards[(1 << bit) | suffix] = ((bit + 2) << 16) | (_five_highest_cards[suffix] >> 4);
-}
-
-void JudgeTable :: generateHighestStraight()
-{
-    _highest_straight = new uint8_t[1 << 13];
-
-    for (uint64_t key = 0; key < (1 << 13); ++key)
-        if (__builtin_popcountll(key) >= 5)
-            _highest_straight[key] = 0x10;
-
-    uint64_t baby_straight = 0x100f;
-    for (uint64_t dummy = 0; dummy < (1 << 8); ++dummy)
-        _highest_straight[baby_straight | (dummy << 4)] = 0x15;
-
-    uint64_t straight = 0x1f;
-    for (int offset = 0; offset <= 8; ++offset)
-        for (uint64_t prefix = 0; prefix < (1 << (8 - offset)); ++prefix)
-            for (uint64_t suffix = 0; suffix < (1 << offset); ++suffix)
-                _highest_straight[(straight << offset) | (prefix << (offset + 5)) | suffix] = 0x10 | (offset + 6);
 }
 
 void JudgeTable :: recFlushTable(Community& com, int start, int depth) {
@@ -141,6 +108,11 @@ void JudgeTable :: recFlushTable(Community& com, int start, int depth) {
 
 void JudgeTable :: recUnsuitedTable(Community& com, int start, int depth, int* freq_table) {
 	if(depth == 5) {
+		
+		if(_unsuited_table[com.getCodedKey()&0x00000000ffffffff] == NULL) {
+		   _unsuited_table[com.getCodedKey()&0x00000000ffffffff] = new int [MAX_HAND_HEIGHT_NUMBERS_2SUM+1];
+		}
+		
 		PlayerCards pc;
 		this->recUnsuitedTablePlayer(pc,com,0, 0, freq_table);
 		
@@ -149,6 +121,7 @@ void JudgeTable :: recUnsuitedTable(Community& com, int start, int depth, int* f
 		for(int i=start; i!= 13; i++) {
 			if(freq_table[i] < 4) {
 				com.addCard(i+13*freq_table[i]);
+				//cout << '-' << string(depth, '|') << i << ')'<< ' ' << (com.getCodedKey() & 0x00000000ffffffff) << endl; for debugging
 				freq_table[i]++;
 				this->recUnsuitedTable(com, i, depth+1, freq_table);
 				freq_table[i]--;
@@ -160,17 +133,13 @@ void JudgeTable :: recUnsuitedTable(Community& com, int start, int depth, int* f
 
 void JudgeTable :: recUnsuitedTablePlayer(PlayerCards& pc, Community& com, int start, int depth, int* freq_table) {
 	if(depth == 2) {
-		int* ptable = _unsuited_table[com.getCodedKey() & 0x00000000ffffffff];
-		if(ptable == NULL) {
-			ptable = new int [MAX_HAND_HEIGHT_NUMBERS_2SUM+1];
-		}
-		
-		ptable[pc.getCodedKey()] = unsuitedScore(com.getKey() | pc.getKey());
+ 		_unsuited_table[(com.getCodedKey() & 0x00000000ffffffff)][pc.getCodedKey()]= unsuitedScore(com.getKey() | pc.getKey());
 	}
 	else {
 		for(int i=start; i!=13; i++) {
 			if(freq_table[i]<4) {
-				pc.addCard(i+13*freq_table[i]);
+				//cout << " hi " << i;
+ 				pc.addCard(i+13*freq_table[i]);
 				freq_table[i]++;
 				this->recUnsuitedTablePlayer(pc,com,i,depth+1,freq_table);
 				freq_table[i]--;
@@ -205,6 +174,38 @@ void JudgeTable :: recSuitMap(Community& com, int start, int depth) {
 
 }
 
+
+
+/*Vytautas functions */
+void JudgeTable :: generateFiveHighestCards()
+{
+    _five_highest_cards = new uint64_t[1 << 13];
+
+    _five_highest_cards[0] = 0;
+    for (int bit = 0; bit < 13; bit = ++bit)
+       for (uint64_t suffix = 0; suffix < (1 << bit); ++suffix)
+          _five_highest_cards[(1 << bit) | suffix] = ((bit + 2) << 16) | (_five_highest_cards[suffix] >> 4);
+}
+
+void JudgeTable :: generateHighestStraight()
+{
+    _highest_straight = new uint8_t[1 << 13];
+
+    for (uint64_t key = 0; key < (1 << 13); ++key)
+        if (__builtin_popcountll(key) >= 5)
+            _highest_straight[key] = 0x10;
+
+    uint64_t baby_straight = 0x100f;
+    for (uint64_t dummy = 0; dummy < (1 << 8); ++dummy)
+        _highest_straight[baby_straight | (dummy << 4)] = 0x15;
+
+    uint64_t straight = 0x1f;
+    for (int offset = 0; offset <= 8; ++offset)
+        for (uint64_t prefix = 0; prefix < (1 << (8 - offset)); ++prefix)
+            for (uint64_t suffix = 0; suffix < (1 << offset); ++suffix)
+                _highest_straight[(straight << offset) | (prefix << (offset + 5)) | suffix] = 0x10 | (offset + 6);
+}
+
 int JudgeTable :: flushScore(uint64_t key) const
 {
     uint8_t straight = _highest_straight[key];
@@ -224,6 +225,7 @@ int JudgeTable :: flushScore(uint64_t key) const
 
     else
         return 0;
+		
 }
 
 int JudgeTable :: unsuitedScore(uint64_t key) const
