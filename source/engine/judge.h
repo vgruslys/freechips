@@ -2,9 +2,10 @@
 #define __JUDGE__
 #include "community.h"
 #include "player_cards.h"
-/*Evaluator - a class which determines the score of a community + player hand */
+
+/*Judge - a class which determines the score of a community + player hand */
 class Judge {
 public:
-	virtual int verdict(const Community&, const PlayerCards&);
+	virtual int verdict(const Community&, const PlayerCards&) = 0;
 };
 #endif

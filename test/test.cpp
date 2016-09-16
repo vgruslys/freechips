@@ -2,10 +2,12 @@
 #include "card.h"
 #include "random_deck_plain.h"
 #include "odds_calculator_random.h"
+#include "judge_table.h"
 using namespace std;
 
 int main()
 {
+	/*
 	RandomDeckPlain deck;
 	/*
 	Card card;
@@ -33,7 +35,7 @@ int main()
 	
 	*/
 
-	
+	/*
 	OddsCalculatorRandom calculator;
 	Card mycards[2];
 	Card oppcards[2];
@@ -46,6 +48,8 @@ int main()
 	
 	pair<float, float> result = calculator.handOdds(mycards[0], mycards[1], oppcards[0], oppcards[1], street, 5);
 	cout << result.first << " " << result.second << " " << result.first + 0.5*result.second  << endl;
+	*/
+	JudgeTable judge;
 	return 0;
 	
 }
