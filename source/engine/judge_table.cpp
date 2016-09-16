@@ -2,7 +2,8 @@
 #include "community.h"
 #include "player_cards.h"
 #include "key_numbers.h"
-
+#include <iostream>
+using namespace std;
 int JudgeTable::verdict(const Community& com, const PlayerCards& pc) const {
 	
 	/*static internal variables */
@@ -48,6 +49,7 @@ int JudgeTable::verdict(const Community& com, const PlayerCards& pc) const {
 JudgeTable :: JudgeTable(): _suit_map(new int [MAX_SUIT_NUMBERS_5SUM + 1]),
 						  _flush_table(new int [8192]),
 						  _unsuited_table(new int* [MAX_HEIGHT_NUMBERS_5SUM + 1])
+						  
 {
 	for(int i=0; i!=MAX_SUIT_NUMBERS_5SUM + 1; i++) {
 		_suit_map[i] = 0;
@@ -121,7 +123,6 @@ void JudgeTable :: recUnsuitedTable(Community& com, int start, int depth, int* f
 		for(int i=start; i!= 13; i++) {
 			if(freq_table[i] < 4) {
 				com.addCard(i+13*freq_table[i]);
-				//cout << '-' << string(depth, '|') << i << ')'<< ' ' << (com.getCodedKey() & 0x00000000ffffffff) << endl; for debugging
 				freq_table[i]++;
 				this->recUnsuitedTable(com, i, depth+1, freq_table);
 				freq_table[i]--;
@@ -138,7 +139,6 @@ void JudgeTable :: recUnsuitedTablePlayer(PlayerCards& pc, Community& com, int s
 	else {
 		for(int i=start; i!=13; i++) {
 			if(freq_table[i]<4) {
-				//cout << " hi " << i;
  				pc.addCard(i+13*freq_table[i]);
 				freq_table[i]++;
 				this->recUnsuitedTablePlayer(pc,com,i,depth+1,freq_table);
@@ -165,9 +165,9 @@ void JudgeTable :: recSuitMap(Community& com, int start, int depth) {
 	}
 	else {
 		for(int i=start; i!=4; i++) {
-			com.addCard(1<< (i*13));
+			com.addCard(i*13);
 			recSuitMap(com, i, depth+1);
-			com.removeCard(1<< (i*13));
+			com.removeCard(i*13);
 		}
 			
 	}
