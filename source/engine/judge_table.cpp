@@ -256,35 +256,36 @@ int JudgeTable :: unsuitedScore(uint64_t key) const
 
     
     if (frequency_masks[3]) {                               // This implies four-of-a-kind.
-        uint64_t fours  = _five_highest_cards[frequency_masks[3]] & 0xf0000;
-        uint64_t kicker = (_five_highest_cards[frequency_masks[0] & ~frequency_masks[3]] & 0xf0000) >> 4;
-        return 0x700000 | fours | kicker;
+        uint64_t fours  = (_five_highest_cards[frequency_masks[3]] & 0xf0000) >> 16;
+        uint64_t kicker = (_five_highest_cards[frequency_masks[0] & ~(1LL << fours)] & 0xf0000) >> 4;
+        return 0x700000 | (fours << 16) | kicker;
     }
 
     else if (frequency_masks[2]) {                          // This implies full-house or three-of-a-kind.
-        uint64_t threes = _five_highest_cards[frequency_masks[2]] & 0xf0000;
-        uint64_t twos   = (_five_highest_cards[frequency_masks[1] & ~frequency_masks[2]] & 0xf0000) >> 4;
+        uint64_t threes = (_five_highest_cards[frequency_masks[2]] & 0xf0000) >> 16;
+        uint64_t twos   = (_five_highest_cards[frequency_masks[1] & ~(1LL << threes)] & 0xf0000) >> 4;
 
         if (twos)                                           // This implies full-house
-            return 0x600000 | threes | twos;
+            return 0x600000 | (threes << 16) | twos;
         
         else {                                              // This implies three-of-a-kind.
-            uint64_t kickers = (_five_highest_cards[frequency_masks[0] & ~frequency_masks[2]] & 0xff000) >> 4;
-            return 0x300000 | threes | kickers;
+            uint64_t kickers = (_five_highest_cards[frequency_masks[0] & ~(1LL << threes)] & 0xff000) >> 4;
+            return 0x300000 | (threes << 16) | kickers;
         }
     }
 
     else if (frequency_masks[1]) {                          // This implies two-pair or one-pair.
-        uint64_t twos = _five_highest_cards[frequency_masks[1]] & 0xff000;
+        uint64_t twos_hi = (_five_highest_cards[frequency_masks[1]] & 0xf0000) >> 16;
+        uint64_t twos_lo = (_five_highest_cards[frequency_masks[1]] & 0x0f000) >> 12;
 
-        if (twos & 0x0f000) {                               // This implies two-pair.
-            uint64_t kicker = (_five_highest_cards[frequency_masks[0] & ~frequency_masks[1]] & 0xf0000) >> 8;
-            return 0x200000 | twos | kicker;
+        if (twos_lo) {                                     // This implies two-pair.
+            uint64_t kicker = (_five_highest_cards[frequency_masks[0] & ~(1LL << twos_hi) & ~(1LL << twos_lo)] & 0xf0000) >> 8;
+            return 0x200000 | (twos_hi << 16) | (twos_lo << 16) | kicker;
         }
 
         else {                                              // This implies one-pair.
-            uint64_t kickers = (_five_highest_cards[frequency_masks[0] & ~frequency_masks[1]] & 0xfff00) >> 4;
-            return 0x100000 | twos | kickers;
+            uint64_t kickers = (_five_highest_cards[frequency_masks[0] & ~(1LL << twos_hi)] & 0xfff00) >> 4;
+            return 0x100000 | (twos_hi << 16) | kickers;
         }
     }
 
