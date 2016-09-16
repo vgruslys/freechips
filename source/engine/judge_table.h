@@ -25,6 +25,6 @@ private:
 	void recFlushTable(Community&, int, int); //To cleanly construct the flush table
 	void recUnsuitedTable(Community&, int, int, int*); //To cleanly construct the unsuited table (choose the 5 community cards)
 	void recUnsuitedTablePlayer(PlayerCards&, Community&, int, int, int*); //to cleanly construct the unsuited table (choose the two player cards)
-	void recSuitMap(Community&, int, int);
+	void recSuitMap(Community&, int, int); //To cleanly create the suit map
 };
 #endif
