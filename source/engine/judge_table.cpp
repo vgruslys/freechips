@@ -63,9 +63,9 @@ JudgeTable :: JudgeTable(): _suit_map(new int [MAX_SUIT_NUMBERS_5SUM + 1]),
 	for(int i=0; i!= MAX_HEIGHT_NUMBERS_5SUM + 1; i++) {
 		_unsuited_table[i] = NULL;
 	}
-	generateTables();
     generateFiveHighestCards();
     generateHighestStraight();
+	generateTables();
 }
 
 JudgeTable :: ~JudgeTable ()
@@ -111,6 +111,8 @@ void JudgeTable :: generateFiveHighestCards()
 
 void JudgeTable :: generateHighestStraight()
 {
+    _highest_straight = new uint8_t[1 << 13];
+
     for (uint64_t key = 0; key < (1 << 13); ++key)
         if (__builtin_popcountll(key) >= 5)
             _highest_straight[key] = 0x10;
