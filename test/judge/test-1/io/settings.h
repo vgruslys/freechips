@@ -1,3 +1,3 @@
-#include "judge_table.h"
+#include "judge_20M.h"
 
-typedef JudgeTable JUDGE;
+typedef Judge20M JUDGE;

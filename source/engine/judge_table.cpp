@@ -200,13 +200,13 @@ int JudgeTable :: unsuitedScore(uint64_t key) const
 {
     uint64_t frequency_masks[4] = {0};  // These masks show which cards appear at least i+1 times, 0 <= i <= 3.
 
-    int spades_offset   = 0;
-    int clubs_offset    = 13;
-    int diamonds_offset = 26;
-    int hearts_offset   = 39;
+    int spades_offset   = 39;
+    int clubs_offset    = 26;
+    int diamonds_offset = 13;
+    int hearts_offset   = 0;
 
     uint64_t spades   = (key & (0x1fffLL << spades_offset))   >> spades_offset;
-    uint64_t clubs    = (key & (0x1fffLL < clubs_offset))     >> clubs_offset;
+    uint64_t clubs    = (key & (0x1fffLL << clubs_offset))     >> clubs_offset;
     uint64_t diamonds = (key & (0x1fffLL << diamonds_offset)) >> diamonds_offset;
     uint64_t hearts   = (key & (0x1fffLL << hearts_offset))   >> hearts_offset;
 
@@ -224,7 +224,17 @@ int JudgeTable :: unsuitedScore(uint64_t key) const
     frequency_masks[1] |= (frequency_masks[0] & hearts);
     frequency_masks[0] |= hearts;
 
-    
+    /*
+    printf("hearts   = %llx\n", hearts);
+    printf("diamonds = %llx\n", diamonds);
+    printf("clubs    = %llx\n", clubs);
+    printf("spades   = %llx\n", spades);
+    printf("singles  = %llx\n", frequency_masks[0]);
+    printf("pairs    = %llx\n", frequency_masks[1]);
+    printf("triples  = %llx\n", frequency_masks[2]);
+    printf("fours    = %llx\n", frequency_masks[3]);
+    */
+
     if (frequency_masks[3]) {                               // This implies four-of-a-kind.
         uint64_t fours  = (_five_highest_cards[frequency_masks[3]] & 0xf0000) >> 16;
         uint64_t kicker = (_five_highest_cards[frequency_masks[0] & ~(1LL << fours)] & 0xf0000) >> 4;

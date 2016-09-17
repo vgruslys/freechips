@@ -20,18 +20,15 @@ int evaluate(uint64_t cards, JUDGE& judge, Community& community, PlayerCards& pl
     community.reset();
     player_cards.reset();
 
-    community.addCard( cards & 0x000000000000ffLL);
-    community.addCard((cards & 0x0000000000ff00LL) >> 8);
-    community.addCard((cards & 0x00000000ff0000LL) >> 16);
-    community.addCard((cards & 0x000000ff000000LL) >> 24);
-    community.addCard((cards & 0x0000ff00000000LL) >> 32);
-
+    community.addCard(    cards & 0x000000000000ffLL      );
+    community.addCard(   (cards & 0x0000000000ff00LL) >> 8);
+    community.addCard(   (cards & 0x00000000ff0000LL) >> 16);
+    community.addCard(   (cards & 0x000000ff000000LL) >> 24);
+    community.addCard(   (cards & 0x0000ff00000000LL) >> 32);
     player_cards.addCard((cards & 0x00ff0000000000LL) >> 40);
     player_cards.addCard((cards & 0xff000000000000LL) >> 48);
 
     return judge.verdict(community, player_cards);
-   
-   //return 0; 
 }
 
 int main()
@@ -50,6 +47,7 @@ int main()
         verdict[i] = evaluate(data[i], judge, community, player_cards);    
 
     FILE* file_out = fopen(PATH_OUT, "wb");
+    fwrite(&size, sizeof(uint32_t), 1, file_out);
     fwrite(verdict, sizeof(uint32_t), size, file_out);
     fclose(file_out);
 

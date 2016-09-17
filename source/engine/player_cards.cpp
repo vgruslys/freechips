@@ -14,7 +14,6 @@ void PlayerCards :: addCard(Card card) {
 	_coded_key += _coded_card_map[card];
 } 
 
-
 void PlayerCards :: removeCard(Card card) {
 	_key -= _card_map[card];
 	_coded_key -= _coded_card_map[card];
