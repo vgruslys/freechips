@@ -20,6 +20,12 @@ void PlayerCards :: removeCard(Card card) {
 	_coded_key -= _coded_card_map[card];
 }
 
+void PlayerCards :: reset()
+{
+    _key = 0;
+    _coded_key = 0;
+}
+
 uint64_t PlayerCards :: getKey() const {return _key;}
 
 uint64_t PlayerCards :: getCodedKey() const {return _coded_key;}

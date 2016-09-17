@@ -7,11 +7,12 @@
 
 class PlayerCards {
 	public:
-		void addCard(Card);
-		void removeCard(Card);
-		
-	    uint64_t getKey() const;
-		uint64_t getCodedKey() const;
+		void addCard(Card);                         // Add a card to the player's hand
+		void removeCard(Card);                      // Removes a specified card (trying to remove a card which was not added before will lead to undefined behaviour)
+		void reset();                               // Removes all cards from the player's hand
+
+	    uint64_t getKey() const;                    // Returns the 52bit key, where each card is represented by a single bit
+		uint64_t getCodedKey() const;               // Returns the key obtained using the distinct-sums method
 		
 		PlayerCards();
 	private:

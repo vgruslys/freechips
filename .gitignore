@@ -17,6 +17,11 @@
 ###########
 bin/
 
+# Input/Output files for testing #
+##################################
+*.in
+*.out
+
 # Packages #
 ############
 *.7z

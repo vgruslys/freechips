@@ -10,7 +10,7 @@ int JudgeTable::verdict(const Community& com, const PlayerCards& pc) const {
 	int _flush_score = _flush_table[((com.getKey() >> _suit_map[com.getCodedKey()>>32]) & 0x0000000000001fff) | ((pc.getKey() >> _suit_map[com.getCodedKey()>>32]) & 0x0000000000001fff)];
 	/*Compute the unsuited score*/
 	int _unsuited_score=_unsuited_table[com.getCodedKey() & 0x00000000ffffffff][pc.getCodedKey()];
-	
+
 	return _flush_score > _unsuited_score? _flush_score : _unsuited_score; // returns max of flush and unsuited score
 }
 
