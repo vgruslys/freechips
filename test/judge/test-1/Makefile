@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-O2
+CFLAGS=-O2 -std=c++11
 SRC=../../../source
 INCLUDES=-I$(SRC)/engine -I$(SRC)/global
 
