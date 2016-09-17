@@ -18,7 +18,7 @@ CXXFLAGS= -I../source/communicator -I../source/global -I../source/history -I../s
 
 #Main rule: create holdem
 test: $(OBJECT_FILES)
-	$(CXX) -o $@ $^
+	$(CXX) -pg -o $@ $^
 
 #Cleanup
 .PHONY:clean
