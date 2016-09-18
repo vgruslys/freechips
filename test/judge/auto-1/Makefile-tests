@@ -1,0 +1,4 @@
+all: data/testdata.stamp
+
+data/testdata.stamp: gen/test_gen.py
+	(cd gen && ./test_gen.py)
