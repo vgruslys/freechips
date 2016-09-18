@@ -10,12 +10,12 @@ PlayerCards :: PlayerCards(): _key(0), _coded_key(0), _card_map(new uint64_t [52
 }
 
 void PlayerCards :: addCard(Card card) {
-	_key += _card_map[card];
+	_key |= 1LL << card;
 //	_coded_key += _coded_card_map[card];
 } 
 
 void PlayerCards :: removeCard(Card card) {
-	_key -= _card_map[card];
+	_key &= ~(1LL << card);
 //	_coded_key -= _coded_card_map[card];
 }
 

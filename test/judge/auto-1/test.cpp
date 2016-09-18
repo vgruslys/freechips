@@ -3,9 +3,6 @@
 #include <cstdint>
 #include <cstdio>
 
-const char* PATH_IN  = "io/test.in";
-const char* PATH_OUT = "io/test.out";
-
 const char* card_names[52] = {
     "2s", "3s", "4s", "5s", "6s", "7s", "8s", "9s", "Ts", "Js", "Qs", "Ks", "As",
     "2c", "3c", "4c", "5c", "6c", "7c", "8c", "9c", "Tc", "Jc", "Qc", "Kc", "Ac",
@@ -47,13 +44,18 @@ int evaluate(uint64_t cards, JUDGE& judge, Community& community, PlayerCards& pl
     return judge.verdict(community, player_cards);
 }
 
-int main()
+int main(int argc, char** argv)
 {
+    if (argc != 3) {
+        printf("usage: %s file_in file_out\n", argv[0]);
+        return 0;
+    }
+
     JUDGE judge;
     Community community;
     PlayerCards player_cards;
 
-    FILE* file_in = fopen(PATH_IN, "rb");
+    FILE* file_in = fopen(argv[1], "rb");
     uint64_t size;
     uint64_t* data = readInput(file_in, &size);
     fclose(file_in);
@@ -79,7 +81,7 @@ int main()
         */
     }
 
-    FILE* file_out = fopen(PATH_OUT, "wb");
+    FILE* file_out = fopen(argv[2], "wb");
     fwrite(&size, sizeof(uint32_t), 1, file_out);
     fwrite(verdict, sizeof(uint32_t), size, file_out);
     fclose(file_out);

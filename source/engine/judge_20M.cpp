@@ -14,8 +14,10 @@ int Judge20M::verdict(const Community& com, const PlayerCards& pc) const
                        flushScore((key & (0x1fffLL << 13)) >> 13) |
                        flushScore((key & (0x1fffLL << 26)) >> 26) |
                        flushScore((key & (0x1fffLL << 39)) >> 39);
+    //int _flush_score = 0;
 
     int _unsuited_score = unsuitedScore(com.getKey() | pc.getKey());
+    //int _unsuited_score = 0;
 
 	return _flush_score > _unsuited_score ? _flush_score : _unsuited_score; // returns max of flush and unsuited score
 }

@@ -34,12 +34,17 @@ int evaluate(uint64_t cards)
 	return ACE_evaluate( hand );
 }
 
-int main()
+int main(int argc, char** argv)
 {
+    if (argc != 3) {
+        printf("usage: %s file_in file_out\n", argv[0]);
+        return 0;
+    }
+
     for (int i = 0; i < 52; ++i)
         deck[i] = ACE_makecard(i);
 
-    FILE* file_in = fopen(PATH_IN, "rb");
+    FILE* file_in = fopen(argv[1], "rb");
     uint64_t size;
     uint64_t* data = readInput(file_in, &size);
     fclose(file_in);
@@ -48,7 +53,7 @@ int main()
     for (uint64_t i = 0; i < size; ++i)
         verdict[i] = evaluate(data[i]);    
 
-    FILE* file_out = fopen(PATH_OUT, "wb");
+    FILE* file_out = fopen(argv[2], "wb");
     fwrite(&size, sizeof(uint32_t), 1, file_out);
     fwrite(verdict, sizeof(uint32_t), size, file_out);
     fclose(file_out);

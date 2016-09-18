@@ -2,8 +2,6 @@
 #include <cstdio>
 #include <cstdlib>
 
-const char* PATH_OUT = "../io/test.in";
-
 struct RandomCards {
     RandomCards(int);
 
@@ -55,17 +53,24 @@ uint64_t RandomCards :: draw()
     return _deck[_available];
 }
 
-int main()
+int main(int argc, char** argv)
 {
-    RandomCards random_cards(0);
+    if (argc != 4) {
+        printf("usage: %s file number_of_hands seed\n", argv[0]);
+        return 0;
+    }
 
-    FILE* file_out = fopen(PATH_OUT, "wb");
-    uint64_t size = 20000000;
-    fwrite(&size, sizeof(uint64_t), 1, file_out);
-    
+    uint64_t size = std::strtol(argv[2], NULL, 10);
+    int seed = std::strtol(argv[3], NULL, 10);
+
+    RandomCards random_cards(seed);
+
     uint64_t* data = new uint64_t[size];
     for (uint64_t i = 0; i < size; ++i)
         data[i] = random_cards.sevenCards();
+
+    FILE* file_out = fopen(argv[1], "wb");
+    fwrite(&size, sizeof(uint64_t), 1, file_out);
     fwrite(data, sizeof(uint64_t), size, file_out);
 
     delete[] data;
