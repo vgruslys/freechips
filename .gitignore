@@ -56,3 +56,10 @@ Thumbs.db
 # Vim swap files #
 ##################
 *.swp
+
+# Codelite files and folders #
+##############################
+freechips.workspace
+freechips.project
+freechips.tags
+.codelite/
