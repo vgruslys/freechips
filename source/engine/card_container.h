@@ -6,7 +6,9 @@
 class CardContainer {
     public:
 		void addCard(Card); // Add a card 
+		void addCard(Card*, int); //Add a bunch of cards
 		void removeCard(Card); //Removes the card BEWARE: you must NOT remove a card which isn't there already
+		void removeCard(Card*, int); //Remove a bunch of cards
 		void reset(); //empties the card container
 		uint64_t getKey() const; //returns the normal key which is 1 bit per card, 52 bits in total, 
 		                         //plus 4 x 3 bits for suit counts

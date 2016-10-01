@@ -29,3 +29,15 @@ int RandomizerPlain::randWeights(int* array, int size)
 {
     return 0;
 }
+
+void RandomizerPlain :: randSubset(int* source, int source_size, int destination_size) {
+	int t = 0;
+	int temp = 0;
+	for(int i=0; i!= destination_size; ++i) {
+		t = randInt(i,source_size - 1);
+		temp = source[i];
+		source[i] = source[t];
+		source[t] = temp;
+		
+	}
+}

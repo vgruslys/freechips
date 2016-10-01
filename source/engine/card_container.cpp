@@ -87,3 +87,13 @@ int CardContainer :: getCards(int* array) const {
 	return counter;
 	
 }
+
+void CardContainer :: addCard(Card* array, int size) {
+	for(int i=0; i!= size; i++)
+		this->addCard(array[i]);
+}
+
+void CardContainer :: removeCard(Card* array, int size) {
+	for(int i=0; i != size; i++)
+		this->removeCard(array[i]);
+}

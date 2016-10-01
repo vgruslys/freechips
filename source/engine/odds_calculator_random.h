@@ -9,9 +9,9 @@
 class OddsCalculatorRandom: public OddsCalculator
 {
     public:
-        void setAccuracy(float); // The error in computing the probability 
-        void setConfidence(float) ; //Set the confidence probability that the error is within epsilon of real target
-        std::pair<float, float>  odds(const CardContainer &, const CardContainer&, const CardContainer&); //Compute hand odds
+        void setAccuracy(float) final; // The error in computing the probability 
+        void setConfidence(float) final ; //Set the confidence probability that the error is within epsilon of real target
+        std::pair<float, float>  odds(const CardContainer &, const CardContainer&, const CardContainer&) final; //Compute hand odds
        
         OddsCalculatorRandom(Judge&);
     private:
@@ -19,7 +19,8 @@ class OddsCalculatorRandom: public OddsCalculator
         float _confidence;
         float _accuracy;
         void updateTrials(); //Computes the number of trials required for a given confidence and accuracy
-        RandomDeckPlain _rdeck;
+		
+		RandomizerPlain _randomizer;
 		Judge& _judge;
 };
 #endif

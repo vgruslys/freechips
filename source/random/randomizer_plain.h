@@ -5,8 +5,10 @@
 class RandomizerPlain: public Randomizer
 {
 public:
-    int randInt(int, int); //Returns a (uniform) random int in range [a,b]
-    int randWeights(int*, int); 
+    int randInt(int, int) final; //Returns a (uniform) random int in range [a,b]
+    int randWeights(int*, int) final ;
+	void randSubset(int*, int, int) final; //Selects r distinct random elements from the source and places them at the beginning 
+											//of the source
     RandomizerPlain();
     
 private:
