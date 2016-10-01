@@ -8,7 +8,7 @@
 #include <cstdio>
 
 /*A card is an 8 bit integer; the first four bits represent the height; the last four the suit */
-typedef std::int8_t Card; 
+typedef std::uint8_t Card; 
 typedef std::int8_t Height;
 typedef std::int8_t Suit;
 

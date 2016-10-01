@@ -77,10 +77,10 @@ uint64_t CardContainer :: getKey() const {
 }
 
 int CardContainer :: getCards(int* array) const {
-	uint64_t key = (_key & 0xfff000000000000);
+	uint64_t key = (_key & 0x000fffffffffffff);
 	int counter = 0;
 	while(key) {
-		array[counter] = __builtin_clzll(key);
+		array[counter] = __builtin_ctzll(key);
 		key -= (1ll << array[counter]);
 		++counter;
 	}

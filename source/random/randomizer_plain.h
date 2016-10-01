@@ -2,12 +2,13 @@
 #define __RANDOMIZER_PLAIN__
 #include <random>
 #include "randomizer.h"
+#include "stdint.h"
 class RandomizerPlain: public Randomizer
 {
 public:
     int randInt(int, int) final; //Returns a (uniform) random int in range [a,b]
     int randWeights(int*, int) final ;
-	void randSubset(int*, int, int) final; //Selects r distinct random elements from the source and places them at the beginning 
+	void randSubset(uint8_t*, int, int) final; //Selects r distinct random elements from the source and places them at the beginning 
 											//of the source
     RandomizerPlain();
     

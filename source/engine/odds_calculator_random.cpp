@@ -5,7 +5,7 @@
 #include <utility>
 #include <iostream>
 #include "stdint.h"
-
+#include <bitset>
 using namespace std;
 void OddsCalculatorRandom::setConfidence(float confidence) {
     _confidence = confidence;
@@ -33,9 +33,9 @@ std::pair<float, float> OddsCalculatorRandom::odds(const CardContainer& com,cons
 	int p2_cards_number = p2.getCards(cards + com_cards_number + p1_cards_number);
 	
 	int cards_number = com_cards_number + p1_cards_number + p2_cards_number; //Total number of cards present
-	
-	
-	int deck[52];
+
+
+	Card deck[52];
 	for(int i=0; i!= 52; ++i) //initialize deck
 		deck[i] = i; 	
 	
@@ -52,8 +52,7 @@ std::pair<float, float> OddsCalculatorRandom::odds(const CardContainer& com,cons
 		}
 		--deck_size;
 	}
-	
-	
+
     _judge.reset(); //Reset the judge
 	
 	//feed the judge with scenarios
@@ -62,10 +61,13 @@ std::pair<float, float> OddsCalculatorRandom::odds(const CardContainer& com,cons
 		CardContainer temp_com = com;
 		CardContainer temp_p1 = p1;
 		CardContainer temp_p2 = p2;
-		temp_com.addCard((Card*) deck, 5-com_cards_number);
-		temp_p1.addCard((Card*) deck + com_cards_number, 2-p1_cards_number);
-		temp_p2.addCard((Card*) deck + com_cards_number + p1_cards_number, 2- p2_cards_number);
+		temp_com.addCard(deck, 5-com_cards_number);
+		temp_p1.addCard(deck + 5-com_cards_number, 2-p1_cards_number);
+		temp_p2.addCard(deck + 7-com_cards_number - p1_cards_number, 2- p2_cards_number);
 		_judge.addScenario(temp_com, temp_p1, temp_p2);
+		//cout << "Community:" << endl << bitset<64>(temp_com.getKey()) << endl;
+		//cout << "P1:" << endl<<  bitset<64>(temp_p1.getKey()) << endl;
+		//cout << "P2:" << endl <<bitset<64>(temp_p2.getKey()) << endl;
 	}
 	
 	//Return the result coming from the judge
@@ -78,4 +80,5 @@ std::pair<float, float> OddsCalculatorRandom::odds(const CardContainer& com,cons
 
 OddsCalculatorRandom :: OddsCalculatorRandom (Judge& ref) : _judge(ref),_confidence(0.99), _accuracy(0.001),_trials(0) {
     updateTrials();
+	cout << "Trials : " << _trials << endl;
 }

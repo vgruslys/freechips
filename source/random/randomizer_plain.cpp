@@ -1,7 +1,7 @@
 #include "randomizer_plain.h"
 #include <random>
 #include <algorithm>
-
+#include "stdint.h"
 void RandomizerPlain::seed()
 {
     _mt.seed(_device());
@@ -30,7 +30,7 @@ int RandomizerPlain::randWeights(int* array, int size)
     return 0;
 }
 
-void RandomizerPlain :: randSubset(int* source, int source_size, int destination_size) {
+void RandomizerPlain :: randSubset(uint8_t* source, int source_size, int destination_size) {
 	int t = 0;
 	int temp = 0;
 	for(int i=0; i!= destination_size; ++i) {

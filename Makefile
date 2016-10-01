@@ -14,19 +14,17 @@ SOURCE_FILES = $(wildcard source/*.cpp) \
 OBJECT_FILES=$(SOURCE_FILES:.cpp=.o)
 
 #Define flags for g++, in this case just a bunch of -I[include_directory] plus the C++11 specification
-CXXFLAGS=-Isource -Isource/communicator -Isource/global -Isource/history -Isource/random -Isource/engine -Isource/engine/qeval -Isource/engine/vectorclass -std=c++11 -mavx2 -mbmi -flto 
+CXXFLAGS=-Isource -Isource/communicator -Isource/global -Isource/history -Isource/random -Isource/engine -Isource/engine/qeval -Isource/engine/vectorclass -std=c++11 -mavx2 -mbmi  -O3 
 
 #Main rule: create holdem
 holdem: $(OBJECT_FILES)
-	$(CXX) -o $@ $^
+	$(CXX) -pg -flto -o $@ $^
 
 #Cleanup
 .PHONY:clean
 clean:
 	rm -f $(OBJECT_FILES) holdem
-#Test
-test: $(filter-out holdem.o,$(OBJECT_FILES)) test/test.o
-	$(CXX) -o test/$@ $^
+
 
 	  
 	
