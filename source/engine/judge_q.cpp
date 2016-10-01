@@ -7,13 +7,13 @@ JudgeQ :: JudgeQ (const QEval & ref):_scorer(ref) {
 	_player2_scenarios.reserve(1000000);
 }
 
-int JudgeQ :: verdict(const Community& com, const PlayerCards& p1, const PlayerCards& p2) const {
+int JudgeQ :: verdict(const CardContainer& com, const CardContainer& p1, const CardContainer& p2) const {
 	uint32_t p1_score = _scorer.score(com.getKey() + p1.getKey());
 	uint32_t p2_score = _scorer.score(com.getKey() + p2.getKey());
 	return p1_score > p2_score ? 1 : (p2_score > p1_score ? -1 : 0);
 } 
 
-void JudgeQ :: addScenario(const Community& com, const PlayerCards& p1, const PlayerCards& p2) {
+void JudgeQ :: addScenario(const CardContainer& com, const CardContainer& p1, const CardContainer& p2) {
 	_player1_scenarios.push_back(com.getKey() + p1.getKey());
 	_player2_scenarios.push_back(com.getKey() + p2.getKey());
 }

@@ -1,8 +1,8 @@
 #include "card.h"
-#include "community.h"
+#include "card_container.h"
 #include "stdint.h"
 
-const uint64_t Community :: _card_map [52] =
+const uint64_t CardContainer :: _card_map [52] =
 {
 0x10000000000001,
 0x10000000000002,
@@ -58,22 +58,32 @@ const uint64_t Community :: _card_map [52] =
 0x2008000000000000
 };
 
-Community :: Community():_key(0) { }
+CardContainer :: CardContainer():_key(0) { }
 
-void Community :: addCard(Card card) {
+void CardContainer :: addCard(Card card) {
 	_key |= _card_map[card];
 }
 
-void Community :: removeCard(Card card) {
+void CardContainer :: removeCard(Card card) {
 	_key -= _card_map[card];
 }
 
-void Community :: reset() {
+void CardContainer :: reset() {
 	_key = 0; 
 }
 
-
-
-uint64_t Community :: getKey() const {
+uint64_t CardContainer :: getKey() const {
 	return _key;
+}
+
+int CardContainer :: getCards(int* array) const {
+	uint64_t key = (_key & 0xfff000000000000);
+	int counter = 0;
+	while(key) {
+		array[counter] = __builtin_clzll(key);
+		key -= (1ll << array[counter]);
+		++counter;
+	}
+	return counter;
+	
 }
