@@ -32,7 +32,7 @@
  * 
  ***************************************************************************************************/
  
-uint32_t QEvalAVX2::score(uint64_t key) const { 
+uint32_t QEvalAVX2::score(const uint64_t key) const { 
 	
 	//Constants
 	static const int spades_offset   = 39;
@@ -221,7 +221,7 @@ uint8_t QEvalAVX2 :: findBestStraight(uint64_t cards) const {
  * 
  ********************************************************************************************************************/
 
-inline void QEvalAVX2::batch16(uint64_t* keys, uint32_t* scores) const
+inline void QEvalAVX2::batch16(const uint64_t* keys, uint32_t* scores) const
 {
 	//Read keys
 	Vec4uq key1;
@@ -396,7 +396,7 @@ inline Vec16us QEvalAVX2::findStraight(Vec16us v) const {
 	return best_straight;
 }
 
-inline void QEvalAVX2::score(uint64_t* keys, uint32_t* scores, uint64_t size) const {
+inline void QEvalAVX2::score(const uint64_t* keys, uint32_t* scores, uint64_t size) const {
 	uint64_t tot = size/16;
 	for(uint64_t i=0; i!=tot; i++) {
 		batch16(keys, scores);

@@ -17,8 +17,8 @@
 class QEvalAVX2 : public QEval {
 	public:
 		
-		inline uint32_t score(uint64_t) const final;
-		inline void score(uint64_t*, uint32_t*, uint64_t) const final;
+		inline uint32_t score(const uint64_t) const final;
+		inline void score(const uint64_t*, uint32_t*, uint64_t) const final;
 		
 		QEvalAVX2();
 		~QEvalAVX2();
@@ -30,7 +30,7 @@ private:
 		uint8_t findBestStraight(uint64_t) const; //Finds the best straight amongst 13 cards of different heights
 		
 		//Batch processing methods
-		inline void batch16(uint64_t*, uint32_t*) const ; //Processes 16 hands at a time
+		inline void batch16(const uint64_t*, uint32_t*) const ; //Processes 16 hands at a time
 		inline Vec16us findStraight(Vec16us) const ; //Finds best straights 16 hands at a time
 		Vec8ui _index; //Variable used to permute elements of a vector
 };

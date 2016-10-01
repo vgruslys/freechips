@@ -49,8 +49,8 @@
 
 class QEval {
 	public:
-		virtual uint32_t score(uint64_t) const = 0;
-		virtual void score(uint64_t*, uint32_t*,uint64_t) const = 0;
+		virtual uint32_t score(const uint64_t) const = 0;
+		virtual void score(const uint64_t*, uint32_t*,uint64_t) const = 0;
 		
 };
 #endif

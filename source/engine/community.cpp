@@ -1,39 +1,79 @@
 #include "card.h"
 #include "community.h"
-#include "key_numbers.h"
+#include "stdint.h"
 
-Community :: Community():_key(0), _coded_key(0), _card_map(new uint64_t [52]), _coded_card_map(new uint64_t [52]) {
-	
-	for(uint64_t i=0; i!=52; i++) {
-		_coded_card_map[i] = (suit_numbers[i/13] << 32) + height_numbers[i % 13]; //first 32 bits contain the large key,
-		_card_map[i] = 1;
-		_card_map[i] <<= i;
-	}
-	
-}
+const uint64_t Community :: _card_map [52] =
+{
+0x10000000000001,
+0x10000000000002,
+0x10000000000004,
+0x10000000000008,
+0x10000000000010,
+0x10000000000020,
+0x10000000000040,
+0x10000000000080,
+0x10000000000100,
+0x10000000000200,
+0x10000000000400,
+0x10000000000800,
+0x10000000001000,
+0x80000000002000,
+0x80000000004000,
+0x80000000008000,
+0x80000000010000,
+0x80000000020000,
+0x80000000040000,
+0x80000000080000,
+0x80000000100000,
+0x80000000200000,
+0x80000000400000,
+0x80000000800000,
+0x80000001000000,
+0x80000002000000,
+0x400000004000000,
+0x400000008000000,
+0x400000010000000,
+0x400000020000000,
+0x400000040000000,
+0x400000080000000,
+0x400000100000000,
+0x400000200000000,
+0x400000400000000,
+0x400000800000000,
+0x400001000000000,
+0x400002000000000,
+0x400004000000000,
+0x2000008000000000,
+0x2000010000000000,
+0x2000020000000000,
+0x2000040000000000,
+0x2000080000000000,
+0x2000100000000000,
+0x2000200000000000,
+0x2000400000000000,
+0x2000800000000000,
+0x2001000000000000,
+0x2002000000000000,
+0x2004000000000000,
+0x2008000000000000
+};
+
+Community :: Community():_key(0) { }
 
 void Community :: addCard(Card card) {
-	_key |= 1LL << card;
-	//_coded_key += _coded_card_map[card]; 
+	_key |= _card_map[card];
 }
+
 void Community :: removeCard(Card card) {
-	_key &= ~(1LL << card);
-	//_coded_key -= _coded_card_map[card];
+	_key -= _card_map[card];
 }
 
 void Community :: reset() {
 	_key = 0; 
-	_coded_key = 0;
 }
 
-Community :: ~Community() {
-	
-}
+
 
 uint64_t Community :: getKey() const {
 	return _key;
-}
-
-uint64_t Community :: getCodedKey() const {
-	return _coded_key;
 }
