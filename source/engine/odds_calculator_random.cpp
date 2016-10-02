@@ -6,6 +6,7 @@
 #include <iostream>
 #include "stdint.h"
 #include <bitset>
+
 using namespace std;
 void OddsCalculatorRandom::setConfidence(float confidence) {
     _confidence = confidence;
@@ -22,52 +23,66 @@ void OddsCalculatorRandom::updateTrials()
      _trials = ceil(log(4.0/(1.0-_confidence))/(_accuracy*_accuracy));
 }
 
-std::pair<float, float> OddsCalculatorRandom::odds(const CardContainer& com,const CardContainer& p1, const CardContainer& p2) {
-    uint64_t victories = 0;
-    uint64_t draws = 0;
+std::pair<float, float> OddsCalculatorRandom::odds(const CardContainer& community,const CardContainer& p1, const CardContainer& p2) {
 
 	int cards[9]; // the cards present in com u p1 u p2
 	
-	int com_cards_number = com.getCards(cards);
-	int p1_cards_number = p1.getCards(cards + com_cards_number);
-	int p2_cards_number = p2.getCards(cards + com_cards_number + p1_cards_number);
+	const int community_size = community.getCards(cards);
+	const int p1_size = p1.getCards(cards);
+	const int p2_size = p2.getCards(cards);
 	
-	int cards_number = com_cards_number + p1_cards_number + p2_cards_number; //Total number of cards present
+	const int size = community_size + p1_size + p2_size; //Total number of cards present
 
 
-	Card deck[52];
-	for(int i=0; i!= 52; ++i) //initialize deck
-		deck[i] = i; 	
+	uint64_t forbidden_cards = (p1.getKey() & 0x000fffffffffffff) + (p2.getKey() & 0x000fffffffffffff) 
+								+ (community.getKey() & 0x000fffffffffffff);
 	
-	//Remove cards from the deck
-	int deck_size = 52;
-	int temp=0; 
-	for(int i=0; i!= cards_number; ++i) {
-		for(int j=0; j!=deck_size; ++j) {
-			if(deck[j] == cards[i]) {
-				temp = deck[deck_size - 1];
-				deck[deck_size - 1] = cards[i];
-				deck[j] = temp;
-			}
-		}
-		--deck_size;
-	}
-
     _judge.reset(); //Reset the judge
 	
+
+	std::mt19937_64 mt; 
+	
+	uniform_int_distribution<int> distribution(0,51);
+	
+	CardContainer p1_copy = p1;
+	CardContainer p2_copy = p2;
+	CardContainer community_copy = community;
+	
+	uint8_t rand_card = 0;
+	uint64_t forbidden_cards_copy = forbidden_cards;
+	int community_counter =0;
+	int p1_counter = 0;
+	int p2_counter = 0;
 	//feed the judge with scenarios
+	int random_card = 0;
+	uint64_t rand_card_64;
 	for(int i=0; i!= _trials; ++i) {
-		_randomizer.randSubset(deck, deck_size, 9-cards_number);
-		CardContainer temp_com = com;
-		CardContainer temp_p1 = p1;
-		CardContainer temp_p2 = p2;
-		temp_com.addCard(deck, 5-com_cards_number);
-		temp_p1.addCard(deck + 5-com_cards_number, 2-p1_cards_number);
-		temp_p2.addCard(deck + 7-com_cards_number - p1_cards_number, 2- p2_cards_number);
-		_judge.addScenario(temp_com, temp_p1, temp_p2);
-		//cout << "Community:" << endl << bitset<64>(temp_com.getKey()) << endl;
-		//cout << "P1:" << endl<<  bitset<64>(temp_p1.getKey()) << endl;
-		//cout << "P2:" << endl <<bitset<64>(temp_p2.getKey()) << endl;
+		forbidden_cards_copy = forbidden_cards;
+		p1_copy = p1;
+		p2_copy = p2;
+		community_copy = community;
+		community_counter = 5-community_size;
+		while(community_counter) {
+			while( (forbidden_cards_copy | (rand_card_64 =(1ll << (rand_card = distribution(mt))))) == forbidden_cards_copy);
+			community_copy.addCard(rand_card);
+			forbidden_cards_copy |= rand_card_64;
+			community_counter--;
+		}
+		p1_counter = 2-p1_size;
+		while(p1_counter) {
+			while( (forbidden_cards_copy | (rand_card_64 =(1ll << (rand_card = distribution(mt))))) == forbidden_cards_copy);
+			p1_copy.addCard(rand_card);
+			forbidden_cards_copy |= rand_card_64;
+			p1_counter--;
+		}
+		p2_counter = 2-p2_size;
+		while(p2_counter) {
+			while( (forbidden_cards_copy | (rand_card_64 =(1ll << (rand_card = distribution(mt))))) == forbidden_cards_copy);
+			p2_copy.addCard(rand_card);
+			forbidden_cards_copy |= rand_card_64;
+			p2_counter--;
+		}
+		_judge.addScenario(community_copy, p1_copy, p2_copy);
 	}
 	
 	//Return the result coming from the judge

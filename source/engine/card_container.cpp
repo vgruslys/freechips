@@ -88,7 +88,7 @@ int CardContainer :: getCards(int* array) const {
 	
 }
 
-void CardContainer :: addCard(Card* array, int size) {
+ void CardContainer :: addCard(Card* array, int size) {
 	for(int i=0; i!= size; i++)
 		this->addCard(array[i]);
 }
