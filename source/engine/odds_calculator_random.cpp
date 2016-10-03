@@ -6,6 +6,8 @@
 #include <iostream>
 #include "stdint.h"
 #include <bitset>
+#include "ranvec1.h"
+#include "mwc32_avx2.h"
 
 using namespace std;
 void OddsCalculatorRandom::setConfidence(float confidence) {
@@ -39,10 +41,6 @@ std::pair<float, float> OddsCalculatorRandom::odds(const CardContainer& communit
 	
     _judge.reset(); //Reset the judge
 	
-
-	std::mt19937_64 mt; 
-	
-	uniform_int_distribution<int> distribution(0,51);
 	
 	CardContainer p1_copy = p1;
 	CardContainer p2_copy = p2;
@@ -53,8 +51,14 @@ std::pair<float, float> OddsCalculatorRandom::odds(const CardContainer& communit
 	int community_counter =0;
 	int p1_counter = 0;
 	int p2_counter = 0;
+	
+	MWC32AVX2<160> rgen;
+	
+	uniform_int_distribution<int> distribution(0,51);
+	
 	//feed the judge with scenarios
 	int random_card = 0;
+	//cout << "Begin" << endl;
 	uint64_t rand_card_64;
 	for(int i=0; i!= _trials; ++i) {
 		forbidden_cards_copy = forbidden_cards;
@@ -63,21 +67,21 @@ std::pair<float, float> OddsCalculatorRandom::odds(const CardContainer& communit
 		community_copy = community;
 		community_counter = 5-community_size;
 		while(community_counter) {
-			while( (forbidden_cards_copy | (rand_card_64 =(1ll << (rand_card = distribution(mt))))) == forbidden_cards_copy);
+			while( (forbidden_cards_copy | (rand_card_64 =(1ll << (rand_card = distribution(rgen))))) == forbidden_cards_copy);
 			community_copy.addCard(rand_card);
 			forbidden_cards_copy |= rand_card_64;
 			community_counter--;
 		}
 		p1_counter = 2-p1_size;
 		while(p1_counter) {
-			while( (forbidden_cards_copy | (rand_card_64 =(1ll << (rand_card = distribution(mt))))) == forbidden_cards_copy);
+			while( (forbidden_cards_copy | (rand_card_64 =(1ll << (rand_card = distribution(rgen))))) == forbidden_cards_copy);
 			p1_copy.addCard(rand_card);
 			forbidden_cards_copy |= rand_card_64;
 			p1_counter--;
 		}
 		p2_counter = 2-p2_size;
 		while(p2_counter) {
-			while( (forbidden_cards_copy | (rand_card_64 =(1ll << (rand_card = distribution(mt))))) == forbidden_cards_copy);
+			while( (forbidden_cards_copy | (rand_card_64 =(1ll << (rand_card = distribution(rgen))))) == forbidden_cards_copy);
 			p2_copy.addCard(rand_card);
 			forbidden_cards_copy |= rand_card_64;
 			p2_counter--;
