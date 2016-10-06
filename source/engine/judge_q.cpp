@@ -38,5 +38,5 @@ std::pair<float, float> JudgeQ :: verdict() const {
 	}
 	delete [] _player1_scores;
 	delete [] _player2_scores;
-	return std::pair<float, float>((float) wins / (float) size, (float) draws / size);
+	return std::pair<float, float>((float) wins / (float) size, (float) draws / (float) size);
 }

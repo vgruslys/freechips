@@ -17,8 +17,11 @@ int main()
 	CardContainer community;
 	CardContainer p1;
 	CardContainer p2;
-	p1.addCard(11);
-	p1.addCard(24);
+	p1.addCard(12);
+	p1.addCard(25);
+	
+	p2.addCard(26);
+	p2.addCard(39);
 	
 	QEvalAVX2 scorer;
 	JudgeQ judge(scorer);

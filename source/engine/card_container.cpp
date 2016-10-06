@@ -97,3 +97,8 @@ void CardContainer :: removeCard(Card* array, int size) {
 	for(int i=0; i != size; i++)
 		this->removeCard(array[i]);
 }
+
+CardContainer :: CardContainer (Card* array, int size):_key(0) {
+	for(int i=0; i!= size ; ++i)
+		addCard(array[i]);
+}
